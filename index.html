@@ -303,3 +303,476 @@
             max-width: 500px;
             max-height: 85vh;
             overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-muted);
+            cursor: pointer;
+            outline: none;
+        }
+
+        .modal-close:hover {
+            color: var(--text-main);
+        }
+
+        .modal-text {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            white-space: pre-line;
+            color: var(--text-main);
+        }
+
+        .modal-text h3 {
+            margin-top: 0;
+            color: var(--accent-blue);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator-container">
+    <h2 id="calc-title">Помічник покупця</h2>
+
+    <div class="settings-row">
+        <div class="settings-item">
+            <label for="lang-select">Мова / Lang</label>
+            <select id="lang-select">
+                <option value="uk" selected>Українська</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+        <div class="settings-item">
+            <label id="lbl-currency" for="currency-select">Валюта</label>
+            <select id="currency-select">
+                <option value="грн">грн</option>
+                <option value="$">$</option>
+                <option value="€">€</option>
+            </select>
+        </div>
+        <div class="settings-item">
+            <label id="lbl-unit-type" for="unit-type-select">Тип</label>
+            <select id="unit-type-select">
+                <option value="weight" selected>Вага</option>
+                <option value="volume">Об'єм</option>
+                <option value="length">Довжина</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="section-title" id="title-base-section">Базова ціна та міра товару</div>
+    <div class="input-group-composite">
+        <div class="input-subfield">
+            <label id="lbl-price-main">Цілі (грн)</label>
+            <input type="number" id="price-main" value="0" min="0">
+        </div>
+        <div class="separator">.</div>
+        <div class="input-subfield">
+            <label id="lbl-price-fractional">Копійки</label>
+            <input type="number" id="price-fractional" value="0" min="0" max="99">
+        </div>
+    </div>
+
+    <div class="input-group-composite">
+        <div class="input-subfield">
+            <label id="lbl-base-main">Цілі (кг)</label>
+            <input type="number" id="base-main" value="0" min="0">
+        </div>
+        <div class="separator">.</div>
+        <div class="input-subfield">
+            <label id="lbl-base-fractional">Дробові (гр)</label>
+            <input type="number" id="base-fractional" value="0" min="0" max="999">
+        </div>
+    </div>
+
+    <div class="section-title" id="title-target-section">Скільки вам потрібно розрахувати</div>
+    <div class="input-group-composite">
+        <div class="input-subfield">
+            <label id="lbl-target-main">Цілі (кг)</label>
+            <input type="number" id="target-main" value="0" min="0">
+        </div>
+        <div class="separator">.</div>
+        <div class="input-subfield">
+            <label id="lbl-target-fractional">Дробові (гр)</label>
+            <input type="number" id="target-fractional" value="0" min="0" max="999">
+        </div>
+    </div>
+
+    <div class="discount-container">
+        <label id="lbl-discount" for="final-discount">Додаткова знижка на результат (%)</label>
+        <input type="number" id="final-discount" value="0" min="0" max="100">
+    </div>
+
+    <div class="result-box">
+        <div class="result-label" id="lbl-result-title">Остаточний результат</div>
+        <div class="result-value" id="result-display">0.00 грн</div>
+    </div>
+
+    <div class="action-buttons">
+        <button class="btn btn-reset" id="btn-reset">↺ Очистити</button>
+        <button class="btn btn-save" id="btn-save">💾 Зберегти</button>
+        <button class="btn btn-help" id="btn-help">❓ Довідка</button>
+    </div>
+
+    <div class="history-box">
+        <div class="history-title" id="lbl-history-title">Порівняння товарів (макс. 3)</div>
+        <div class="history-list" id="history-list">
+            </div>
+    </div>
+</div>
+
+<div class="modal-overlay" id="help-modal">
+    <div class="modal-content">
+        <button class="modal-close" id="btn-close-modal">&times;</button>
+        <div class="modal-text" id="modal-text-content">
+            </div>
+    </div>
+</div>
+
+<script>
+    const dictionary = {
+        uk: {
+            title: 'Помічник покупця',
+            currency: 'Валюта',
+            unit_type: 'Тип виміру',
+            price_main: 'Цілі',
+            price_fractional: 'Копійки',
+            discount: 'Додаткова знижка на результат (%)',
+            result_title: 'Остаточний результат',
+            btn_reset: '↺ Очистити',
+            btn_save: '💾 Зберегти',
+            btn_help: '❓ Довідка',
+            history_title: 'Порівняння товарів (макс. 3)',
+            badge_best: 'Вигідно!',
+            item_text: 'Товар',
+            base_section: 'Базова ціна та міра товару',
+            target_section: 'Скільки вам потрібно розрахувати',
+            units: {
+                weight: { main: 'Цілі (кг)', fraction: 'Дробові (гр)' },
+                volume: { main: 'Цілі (л)', fraction: 'Дробові (мл)' },
+                length: { main: 'Цілі (м)', fraction: 'Дробові (см)' }
+            },
+            help_content: `<h3>ІНСТРУКЦІЯ КОРИСТУВАЧА</h3>
+<b>Універсальний калькулятор "Помічник покупця"</b>
+
+Цей калькулятор допоможе вам швидко дізнатися точну вартість будь-якої кількості товару (на вагу, об'єм чи довжину), порівняти ціни та обрати найвигіднішу пропозицію в магазині.
+
+<b>КРОК 1: НАЛАШТУВАННЯ (З чого почати)</b>
+1. Оберіть зручну мову та валюту.
+2. Оберіть тип вимірювання товару:
+   • Вага  --> для товарів у кг та грамах (гр)
+   • Об'єм --> для рідин у літрах (л) та мілілітрах (мл)
+   • Довжина -> для товарів у метрах (м) та сантиметрах (см)
+
+<b>КРОК 2: ВВЕДЕННЯ ДАНИХ (Базова ціна та міра)</b>
+Подивіться на цінник товару та заповніть перші два блоки:
+1. Блок "Базова ціна та міра товару":
+   • Введіть ціну з цінника (окремо цілі та копійки).
+   • Введіть вагу/об'єм/довжину, за яку вказана ця ціна.
+     <i>(Приклад: якщо 150 грн за 450 грамів, то в полі "Цілі" пишіть 0, а в полі "Дробові" пишіть 450).</i>
+2. Блок "Скільки вам потрібно розрахувати":
+   • Введіть ту кількість товару, яку ви реально хочете купити.
+* Розрахунок відбувається автоматично при введенні цифр!
+
+<b>КРОК 3: ЗНИЖКИ ТА РЕЗУЛЬТАТ</b>
+• В полі "Остаточний результат" ви побачите точну вартість.
+• Якщо діє акція, введіть відсоток у полі "Додаткова знижка на результат (%)". Калькулятор миттєво покаже нову ціну.
+
+<b>КРОК 4: ПОРІВНЯННЯ ТОВАРІВ (Як знайти найвигідніший?)</b>
+Якщо ви вагаєтесь між 2 або 3 різними брендами чи упаковками:
+1. Введіть дані першого товару та натисніть кнопre "Зберегти".
+2. Введіть дані другого товару (змініть ціну чи вагу) і знову натисніть "Зберегти".
+3. Знизу з'явиться блок "Порівняння товарів" (максимум 3).
+4. Калькулятор сам знайде найдешевший варіант за перерахунком на 1 грам/мілілітр і виділить його зеленим кольором із поміткою "ВИГІДНО!".
+
+<b>ВАЖЛИВІ ФАКТОРИ ДЛЯ ТОЧНОГО РОЗРАХУНКУ:</b>
+1. НЕ залишайте поля базової міри порожніми або з нулем.
+2. Копійки та грами вводяться ОКРЕМО від цілих чисел. Не пишіть крапки чи коми (замість 1.5 кг пишіть: 1 у полі цілих, 500 у полі дробових).
+3. Функція "Вигідно!" чесно враховує навіть введену вами знижку.
+
+<i>З повагою Розробник: (Izi Vayb)</i>`
+        },
+        en: {
+            title: 'Smart Shopper Assistant',
+            currency: 'Currency',
+            unit_type: 'Unit Type',
+            price_main: 'Whole',
+            price_fractional: 'Cents/Coins',
+            discount: 'Additional discount on result (%)',
+            result_title: 'Final Result',
+            btn_reset: '↺ Clear All',
+            btn_save: '💾 Save Item',
+            btn_help: '❓ Help / Info',
+            history_title: 'Product Comparison (max 3)',
+            badge_best: 'Best Deal!',
+            item_text: 'Product',
+            base_section: 'Base Price and Measurement',
+            target_section: 'How Much Do You Need to Calculate',
+            units: {
+                weight: { main: 'Whole (kg)', fraction: 'Fractional (g)' },
+                volume: { main: 'Whole (L)', fraction: 'Fractional (ml)' },
+                length: { main: 'Whole (m)', fraction: 'Fractional (cm)' }
+            },
+            help_content: `<h3>USER MANUAL</h3>
+<b>Universal Calculator "Smart Shopper Assistant"</b>
+
+This calculator helps you quickly find out the exact cost of any custom quantity of goods (by weight, volume, or length), compare prices, and choose the best deal in the store.
+
+<b>STEP 1: SETTINGS (Where to start)</b>
+1. Select your preferred language and currency.
+2. Select the measurement type:
+   • Weight --> for products in kg and grams (g)
+   • Volume --> for liquids in liters (L) and milliliters (ml)
+   • Length --> for items in meters (m) and centimeters (cm)
+
+<b>STEP 2: ENTERING DATA (Base price and measure)</b>
+Look at the price tag and fill out the first two sections:
+1. Section "Base Price and Measurement":
+   • Enter the price from the tag (separate fields for whole currency and coins).
+   • Enter the weight/volume/length for which this price is specified.
+     <i>(Example: if $1.50 is specified for 450 grams, write 0 in "Whole" and 450 in "Fractional").</i>
+2. Section "How Much Do You Need to Calculate":
+   • Enter the actual quantity of the product you want to buy.
+* The calculation happens automatically as you type!
+
+<b>STEP 3: DISCOUNTS & RESULT</b>
+• In the "Final Result" field, you will see the exact cost.
+• If there is a promo discount, enter the percentage in "Additional discount on result (%)". The calculator will instantly update the price.
+
+<b>STEP 4: PRODUCT COMPARISON (How to find the best deal?)</b>
+If you are choosing between 2 or 3 different brands or packages:
+1. Enter the data for the 1st product and click "Save Item".
+2. Enter the data for the 2nd product (change price or weight) and click "Save Item" again.
+3. The "Product Comparison" block will appear at the bottom (up to 3 items).
+4. The calculator automatically computes the price per 1g/ml/cm and highlights the cheapest option in green with a "Best Deal!" badge.
+
+<b>IMPORTANT FACTORS FOR ACCURATE CALCULATION:</b>
+1. DO NOT leave base measurement fields empty or at zero.
+2. Fractional parts (cents, grams) are entered SEPARATELY from whole numbers. Do not try to write dots or commas (instead of 1.5 kg, write: 1 in whole field, 500 in fractional field).
+3. The "Best Deal!" feature carefully factors in any discount you applied.
+
+<i>Best regards, Developer: (Izi Vayb)</i>`
+        }
+    };
+
+    let savedItems = [];
+
+    // Елементи інтерфейсу
+    const langSelect = document.getElementById('lang-select');
+    const currencySelect = document.getElementById('currency-select');
+    const unitTypeSelect = document.getElementById('unit-type-select');
+
+    const calcTitle = document.getElementById('calc-title');
+    const lblCurrency = document.getElementById('lbl-currency');
+    const lblUnitType = document.getElementById('lbl-unit-type');
+    const titleBaseSection = document.getElementById('title-base-section');
+    const titleTargetSection = document.getElementById('title-target-section');
+
+    const lblPriceMain = document.getElementById('lbl-price-main');
+    const lblPriceFractional = document.getElementById('lbl-price-fractional');
+    const lblBaseMain = document.getElementById('lbl-base-main');
+    const lblBaseFractional = document.getElementById('lbl-base-fractional');
+    const lblTargetMain = document.getElementById('lbl-target-main');
+    const lblTargetFractional = document.getElementById('lbl-target-fractional');
+    const lblDiscount = document.getElementById('lbl-discount');
+    const lblResultTitle = document.getElementById('lbl-result-title');
+    const lblHistoryTitle = document.getElementById('lbl-history-title');
+
+    const priceMainInput = document.getElementById('price-main');
+    const priceFractionalInput = document.getElementById('price-fractional');
+    const baseMainInput = document.getElementById('base-main');
+    const baseFractionalInput = document.getElementById('base-fractional');
+    const targetMainInput = document.getElementById('target-main');
+    const targetFractionalInput = document.getElementById('target-fractional');
+    const finalDiscountInput = document.getElementById('final-discount');
+
+    const resultDisplay = document.getElementById('result-display');
+    const historyList = document.getElementById('history-list');
+
+    const btnReset = document.getElementById('btn-reset');
+    const btnSave = document.getElementById('btn-save');
+    const btnHelp = document.getElementById('btn-help');
+
+    // Елементи модального вікна
+    const helpModal = document.getElementById('help-modal');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+    const modalTextContent = document.getElementById('modal-text-content');
+
+    function updateLanguageAndLabels() {
+        const lang = langSelect.value;
+        const unitType = unitTypeSelect.value;
+        const t = dictionary[lang];
+
+        calcTitle.innerText = t.title;
+        lblCurrency.innerText = t.currency;
+        lblUnitType.innerText = t.unit_type;
+        titleBaseSection.innerText = t.base_section;
+        titleTargetSection.innerText = t.target_section;
+
+        lblPriceMain.innerText = `${t.price_main} (${currencySelect.value})`;
+        lblPriceFractional.innerText = t.price_fractional;
+
+        lblBaseMain.innerText = t.units[unitType].main;
+        lblBaseFractional.innerText = t.units[unitType].fraction;
+        lblTargetMain.innerText = t.units[unitType].main;
+        lblTargetFractional.innerText = t.units[unitType].fraction;
+
+        lblDiscount.innerText = t.discount;
+        lblResultTitle.innerText = t.result_title;
+        lblHistoryTitle.innerText = t.history_title;
+
+        btnReset.innerText = t.btn_reset;
+        btnSave.innerText = t.btn_save;
+        btnHelp.innerText = t.btn_help;
+
+        // Оновлюємо вміст довідки відповідно до мови
+        modalTextContent.innerHTML = t.help_content;
+
+        calculate();
+        renderHistory();
+    }
+
+    function getInputsValues() {
+        const pMain = parseFloat(priceMainInput.value) || 0;
+        const pFrac = parseFloat(priceFractionalInput.value) || 0;
+        const price = pMain + (pFrac / 100);
+
+        const bMain = parseFloat(baseMainInput.value) || 0;
+        const bFrac = parseFloat(baseFractionalInput.value) || 0;
+        const unitType = unitTypeSelect.value;
+        const baseDivisor = unitType === 'weight' ? 1000 : 1000; 
+        const baseMeasure = bMain + (bFrac / baseDivisor);
+
+        const tMain = parseFloat(targetMainInput.value) || 0;
+        const tFrac = parseFloat(targetFractionalInput.value) || 0;
+        const targetMeasure = tMain + (tFrac / baseDivisor);
+
+        const discount = parseFloat(finalDiscountInput.value) || 0;
+
+        return { price, baseMeasure, targetMeasure, discount };
+    }
+
+    function calculate() {
+        const { price, baseMeasure, targetMeasure, discount } = getInputsValues();
+        const currency = currencySelect.value;
+
+        if (baseMeasure <= 0 || price <= 0 || targetMeasure <= 0) {
+            resultDisplay.innerText = `0.00 ${currency}`;
+            return 0;
+        }
+
+        let finalPrice = (price / baseMeasure) * targetMeasure;
+
+        if (discount > 0) {
+            finalPrice = finalPrice * (1 - discount / 100);
+        }
+
+        resultDisplay.innerText = `${finalPrice.toFixed(2)} ${currency}`;
+        return finalPrice;
+    }
+
+    function saveCurrentItem() {
+        const { price, baseMeasure, targetMeasure, discount } = getInputsValues();
+        const currentResult = calculate();
+
+        if (baseMeasure <= 0 || price <= 0 || targetMeasure <= 0) return;
+
+        const costPerUnit = (price / baseMeasure) * (1 - discount / 100);
+        const currency = currencySelect.value;
+
+        if (savedItems.length >= 3) {
+            savedItems.shift(); 
+        }
+
+        savedItems.push({
+            costPerUnit: costPerUnit,
+            display: `${currentResult.toFixed(2)} ${currency}`
+        });
+
+        renderHistory();
+    }
+
+    function renderHistory() {
+        historyList.innerHTML = '';
+        if (savedItems.length === 0) return;
+
+        const lang = langSelect.value;
+        const t = dictionary[lang];
+
+        let minCost = Infinity;
+        let bestIndex = -1;
+
+        savedItems.forEach((item, index) => {
+            if (item.costPerUnit < minCost) {
+                minCost = item.costPerUnit;
+                bestIndex = index;
+            }
+        });
+
+        savedItems.forEach((item, index) => {
+            const itemRow = document.createElement('div');
+            itemRow.className = 'history-item';
+            
+            if (index === bestIndex && savedItems.length > 1) {
+                itemRow.className += ' item-best-style';
+                itemRow.innerHTML = `<span>${t.item_text} №${index + 1}: <b>${item.display}</b></span> <span class="badge-best">${t.badge_best}</span>`;
+            } else {
+                itemRow.innerHTML = `<span>${t.item_text} №${index + 1}: <b>${item.display}</b></span>`;
+            }
+            historyList.appendChild(itemRow);
+        });
+    }
+
+    function resetCalculator() {
+        priceMainInput.value = "0";
+        priceFractionalInput.value = "0";
+        baseMainInput.value = "0";
+        baseFractionalInput.value = "0";
+        targetMainInput.value = "0";
+        targetFractionalInput.value = "0";
+        finalDiscountInput.value = "0";
+        savedItems = [];
+        calculate();
+        renderHistory();
+    }
+
+    // Функції для модального вікна Довідки
+    function openHelp() {
+        helpModal.classList.add('active');
+    }
+
+    function closeHelp() {
+        helpModal.classList.remove('active');
+    }
+
+    [priceMainInput, priceFractionalInput, baseMainInput, baseFractionalInput, targetMainInput, targetFractionalInput, finalDiscountInput].forEach(element => {
+        element.addEventListener('input', calculate);
+    });
+    
+    langSelect.addEventListener('change', updateLanguageAndLabels);
+    currencySelect.addEventListener('change', updateLanguageAndLabels);
+    unitTypeSelect.addEventListener('change', updateLanguageAndLabels);
+    btnReset.addEventListener('click', resetCalculator);
+    btnSave.addEventListener('click', saveCurrentItem);
+    
+    // Обробники подій для Довідки
+    btnHelp.addEventListener('click', openHelp);
+    btnCloseModal.addEventListener('click', closeHelp);
+    helpModal.addEventListener('click', (e) => {
+        if (e.target === helpModal) closeHelp();
+    });
+
+    updateLanguageAndLabels();
+</script>
+</body>
+</html>
