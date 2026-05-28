@@ -18,6 +18,8 @@
             --btn-reset-hover: #c0392b;
             --btn-save-bg: #2ecc71;
             --btn-save-hover: #27ae60;
+            --btn-help-bg: #f39c12;
+            --btn-help-hover: #d35400;
             --discount-bg: #fff8e1;
             --discount-border: #ffb300;
         }
@@ -35,104 +37,176 @@
             display: flex;
             justify-content: center;
             align-items: flex-start;
+            min-height: 100vh;
         }
 
-        .calc-container {
+        .calculator-container {
             background-color: var(--card-bg);
             border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
-            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             width: 100%;
-            max-width: 450px;
-            display: flex;
-            flex-direction: column;
+            max-width: 480px;
+            padding: 20px;
         }
 
         h2 {
             text-align: center;
-            margin-top: 5px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
             color: var(--text-main);
-            font-size: 18px;
-            line-height: 1.3;
-            margin-bottom: 15px;
         }
 
-        .section-title {
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--accent-blue);
-            margin: 15px 0 8px 0;
-            font-weight: bold;
-            border-bottom: 1px solid #edf2f7;
-            padding-bottom: 3px;
-        }
-
-        .row {
+        .settings-row {
             display: flex;
-            flex-wrap: wrap;
             gap: 10px;
-            margin-bottom: 8px;
+            margin-bottom: 20px;
         }
 
-        .col {
+        .settings-item {
             flex: 1;
-            min-width: 130px;
             display: flex;
             flex-direction: column;
         }
 
-        label {
-            font-size: 11px;
+        .settings-item label {
+            font-size: 0.75rem;
             color: var(--text-muted);
             margin-bottom: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        input, select {
-            padding: 10px;
+        select, input {
+            width: 100%;
+            padding: 10px 12px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 1rem;
             color: var(--text-main);
             background-color: #fff;
-            width: 100%;
             outline: none;
             transition: border-color 0.2s;
         }
 
-        input:focus, select:focus {
+        select:focus, input:focus {
             border-color: var(--accent-blue);
         }
 
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            -moz-appearance: textfield;
+        .section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 15px 0 8px 0;
+            color: var(--text-main);
+            border-left: 3px solid var(--accent-blue);
+            padding-left: 8px;
         }
 
-        .btn-block {
+        .input-group-composite {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #fcfcfd;
+            border: 1px dashed var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 12px;
+        }
+
+        .input-subfield {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-subfield label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .input-subfield input {
+            text-align: center;
+            padding: 8px;
+        }
+
+        .separator {
+            font-weight: bold;
+            color: var(--text-muted);
+            margin-top: 15px;
+        }
+
+        .discount-container {
+            background-color: var(--discount-bg);
+            border: 1px solid var(--discount-border);
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .discount-container label {
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .discount-container input {
+            width: 80px;
+            text-align: center;
+            border-color: var(--discount-border);
+        }
+
+        .result-box {
+            background-color: #e8f8f5;
+            border: 2px solid var(--accent-result);
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
+        }
+
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-result);
+        }
+
+        .action-buttons {
             display: flex;
             gap: 10px;
-            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: white;
+            transition: background-color 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
         }
 
         .btn-reset {
             background-color: var(--btn-reset-bg);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            flex: 1;
-            transition: background-color 0.2s;
         }
 
         .btn-reset:hover {
@@ -141,505 +215,91 @@
 
         .btn-save {
             background-color: var(--btn-save-bg);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 15px;
-            font-weight: bold;
-            cursor: pointer;
-            flex: 1;
-            transition: background-color 0.2s;
         }
 
         .btn-save:hover {
             background-color: var(--btn-save-hover);
         }
 
-        .formula-box {
-            background-color: var(--formula-bg);
-            border-left: 4px solid var(--text-muted);
-            padding: 10px;
-            border-radius: 4px 8px 8px 4px;
-            margin-top: 15px;
-            min-height: 40px;
-            display: flex;
-            align-items: center;
+        .btn-help {
+            background-color: var(--btn-help-bg);
         }
 
-        .formula-text {
-            font-style: italic;
-            font-size: 13px;
-            color: #555;
-            line-height: 1.4;
-        }
-
-        .result-box {
-            background-color: #e8f8f5;
-            border: 2px dashed var(--accent-result);
-            border-radius: 10px;
-            padding: 12px;
-            margin-top: 12px;
-            text-align: center;
-        }
-
-        .result-label {
-            font-size: 11px;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            margin-bottom: 3px;
-        }
-
-        .result-value {
-            font-size: 22px;
-            font-weight: bold;
-            color: var(--accent-result);
-            word-break: break-all;
-        }
-
-        /* Стилі для поля знижки */
-        .discount-container {
-            margin-top: 10px;
-            background-color: var(--discount-bg);
-            border: 1px solid var(--discount-border);
-            padding: 10px;
-            border-radius: 8px;
-        }
-
-        .discount-container label {
-            color: #b78103;
-            font-weight: bold;
-        }
-
-        .discount-container input {
-            border-color: var(--discount-border);
-        }
-
-        .discount-row-text {
-            font-size: 14px;
-            color: #e67e22;
-            margin-top: 5px;
-            font-weight: bold;
+        .btn-help:hover {
+            background-color: var(--btn-help-hover);
         }
 
         .history-box {
-            margin-top: 15px;
-            background-color: #fcfcfc;
-            border: 1px solid #e2e8f0;
-            border-radius: 10px;
-            padding: 10px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+        }
+
+        .history-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .history-item {
+            background-color: #f8f9fa;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px;
-            border-bottom: 1px solid #edf2f7;
-            font-size: 13px;
         }
 
-        .history-item:last-child {
-            border-bottom: none;
+        .item-best-style {
+            background-color: #e8f8f5;
+            border-color: #2ecc71;
         }
 
         .badge-best {
-            background-color: #2ec4b6;
+            background-color: var(--accent-result);
             color: white;
             padding: 2px 6px;
             border-radius: 4px;
-            font-size: 10px;
+            font-size: 0.7rem;
             font-weight: bold;
             text-transform: uppercase;
         }
 
-        .item-best-style {
-            background-color: #f0fdf4;
-            border-left: 4px solid #27ae60;
-            font-weight: 500;
+        /* Стилі для модального вікна (Довідка) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        .footer-credits {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 10px;
-            color: #95a5a6;
-            border-top: 1px dashed #e0e0e0;
-            padding-top: 8px;
-            line-height: 1.4;
-        }
-    </style>
-</head>
-<body>
-
-<div class="calc-container">
-    <h2 id="app_title">Універсальний калькулятор "помічник покупця"</h2>
-
-    <div class="row">
-        <div class="col">
-            <label for="language" id="lbl_language">Мова / Language</label>
-            <select id="language">
-                <option value="uk">Українська</option>
-                <option value="en">English (US)</option>
-            </select>
-        </div>
-        <div class="col">
-            <label for="currency" id="lbl_currency_select">Валюта</label>
-            <select id="currency">
-                <option value="грн|коп.">Гривні (грн)</option>
-                <option value="$|cents">Долари ($)</option>
-                <option value="€|cents">Євро (€)</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <label for="unit_type" id="lbl_unit_type">Тип вимірювання</label>
-            <select id="unit_type">
-                <option value="weight">Вага (кг / гр)</option>
-                <option value="volume">Об'єм (л / мл)</option>
-                <option value="length">Довжина (м / см)</option>
-            </select>
-        </div>
-    </div>
-
-    <div class="section-title" id="title_block1">Базова ціна та міра товару</div>
-    
-    <div class="row">
-        <div class="col">
-            <label id="lbl_price_main" for="price_main">Ціна (цілі)</label>
-            <input type="number" id="price_main" value="0" min="0" inputmode="numeric">
-        </div>
-        <div class="col">
-            <label id="lbl_price_fractional" for="price_fractional">Копійки</label>
-            <input type="number" id="price_fractional" value="0" min="0" max="99" inputmode="numeric">
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <label id="lbl_base_main" for="base_main">Цілі (кг)</label>
-            <input type="number" id="base_main" value="0" min="0" inputmode="numeric">
-        </div>
-        <div class="col">
-            <label id="lbl_base_fractional" for="base_fractional">Дробові (гр)</label>
-            <input type="number" id="base_fractional" value="0" min="0" inputmode="numeric" placeholder="0">
-        </div>
-    </div>
-
-    <div class="section-title" id="title_block2">Скільки вам потрібно розрахувати</div>
-    
-    <div class="row">
-        <div class="col">
-            <label id="lbl_target_main" for="target_main">Цілі (кг)</label>
-            <input type="number" id="target_main" value="0" min="0" inputmode="numeric">
-        </div>
-        <div class="col">
-            <label id="lbl_target_fractional" for="target_fractional">Дробові (гр)</label>
-            <input type="number" id="target_fractional" value="0" min="0" inputmode="numeric" placeholder="0">
-        </div>
-    </div>
-
-    <div class="formula-box">
-        <div id="formula_text" class="formula-text">Введіть дані для автоматичного розрахунку...</div>
-    </div>
-
-    <div class="result-box">
-        <div class="result-label" id="lbl_final_result">Остаточний результат</div>
-        <div id="result_value" class="result-value">0 грн. 00 коп.</div>
-        
-        <div id="discount_result_row" class="discount-row-text" style="display: none;"></div>
-    </div>
-
-    <div class="discount-container">
-        <label for="final_discount" id="lbl_final_discount">Додаткова знижка на результат (%)</label>
-        <input type="number" id="final_discount" value="0" min="0" max="100" inputmode="numeric">
-    </div>
-
-    <div class="btn-block">
-        <button class="btn-reset" id="btn_reset">Очистити</button>
-        <button class="btn-save" id="btn_save">Зберегти</button>
-    </div>
-
-    <div class="history-box" id="history_box" style="display: none;">
-        <div class="section-title" id="title_compare" style="margin-top:0;">Порівняння товарів</div>
-        <div id="history_list"></div>
-    </div>
-
-    <div class="footer-credits" id="footer_text">
-        Версія v1.4.0-stable • Розробник: Маценко С. М. (Izi Vayb)
-    </div>
-</div>
-
-<script>
-    const translations = {
-        uk: {
-            app_title: "Універсальний калькулятор \"помічник покупця\"",
-            lbl_language: "Мова / Language",
-            lbl_currency_select: "Валюта",
-            lbl_unit_type: "Тип вимірювання",
-            title_block1: "Базова ціна та міра товару",
-            title_block2: "Скільки вам потрібно розрахувати",
-            lbl_final_result: "Остаточний результат",
-            lbl_final_discount: "Додаткова знижка на результат (%)",
-            btn_reset: "Очистити",
-            btn_save: "Зберегти",
-            title_compare: "Порівняння товарів (макс. 3)",
-            badge_best: "Вигідно!",
-            placeholder_calc: "Введіть дані для автоматичного розрахунку...",
-            price_main: "Ціна (цілі)",
-            currency_options: [
-                { value: "грн|коп.", text: "Гривні (грн)" },
-                { value: "$|cents", text: "Долари ($)" },
-                { value: "€|cents", text: "Євро (€)" }
-            ],
-            units: {
-                weight: { main: 'кг', fractional: 'гр', main_short: 'Цілі (кг)', fractional_short: 'Дробові (гр)', ratio: 1000 },
-                volume: { main: 'л', fractional: 'мл', main_short: 'Цілі (л)', fractional_short: 'Дробові (мл)', ratio: 1000 },
-                length: { main: 'м', fractional: 'см', main_short: 'Цілі (м)', fractional_short: 'Дробові (см)', ratio: 100 }
-            },
-            formula_part: "за",
-            item_text: "Товар",
-            with_discount_text: "Зі знижкою",
-            footer_text: "Версія v1.4.0-stable • Розробник: Маценко С. М. (Izi Vayb)"
-        },
-        en: {
-            app_title: "Universal Calculator \"Smart Shopper\"",
-            lbl_language: "Мова / Language",
-            lbl_currency_select: "Currency",
-            lbl_unit_type: "Measurement Type",
-            title_block1: "Base Price and Item Measure",
-            title_block2: "Amount You Need to Calculate",
-            lbl_final_result: "Final Result",
-            lbl_final_discount: "Extra Result Discount (%)",
-            btn_reset: "Clear All",
-            btn_save: "Save Item",
-            title_compare: "Item Comparison (max 3)",
-            badge_best: "Best Deal!",
-            placeholder_calc: "Enter data for automatic calculation...",
-            price_main: "Price (whole)",
-            currency_options: [
-                { value: "грн|коп.", text: "Hryvnias (грн)" },
-                { value: "$|cents", text: "Dollars ($)" },
-                { value: "€|cents", text: "Euros (€)" }
-            ],
-            units: {
-                weight: { main: 'kg', fractional: 'g', main_short: 'Whole (kg)', fractional_short: 'Frac. (g)', ratio: 1000 },
-                volume: { main: 'l', fractional: 'ml', main_short: 'Liters (l)', fractional_short: 'Frac. (ml)', ratio: 1000 },
-                length: { main: 'm', fractional: 'cm', main_short: 'Meters (m)', fractional_short: 'Frac. (cm)', ratio: 100 }
-            },
-            formula_part: "for",
-            item_text: "Item",
-            with_discount_text: "With Discount",
-            footer_text: "Version v1.4.0-stable • Developer: Matsenko S. M. (Izi Vayb)"
-        }
-    };
-
-    const langSelect = document.getElementById('language');
-    const currencySelect = document.getElementById('currency');
-    const unitTypeSelect = document.getElementById('unit_type');
-    
-    const priceMainInput = document.getElementById('price_main');
-    const priceFractionalInput = document.getElementById('price_fractional');
-    const baseMainInput = document.getElementById('base_main');
-    const baseFractionalInput = document.getElementById('base_fractional');
-    const targetMainInput = document.getElementById('target_main');
-    const targetFractionalInput = document.getElementById('target_fractional');
-    const finalDiscountInput = document.getElementById('final_discount');
-    
-    const lblPriceFractional = document.getElementById('lbl_price_fractional');
-    const lblBaseMain = document.getElementById('lbl_base_main');
-    const lblBaseFractional = document.getElementById('lbl_base_fractional');
-    const lblTargetMain = document.getElementById('lbl_target_main');
-    const lblTargetFractional = document.getElementById('lbl_target_fractional');
-    const lblFinalDiscount = document.getElementById('lbl_final_discount');
-    
-    const formulaText = document.getElementById('formula_text');
-    const resultValue = document.getElementById('result_value');
-    const discountResultRow = document.getElementById('discount_result_row');
-    const btnReset = document.getElementById('btn_reset');
-    const btnSave = document.getElementById('btn_save');
-    const historyBox = document.getElementById('history_box');
-    const historyList = document.getElementById('history_list');
-    const footerText = document.getElementById('footer_text');
-
-    let savedItems = [];
-    let currentCalculationCache = null;
-
-    function updateLanguageAndLabels() {
-        const lang = langSelect.value;
-        const t = translations[lang];
-
-        document.getElementById('app_title').textContent = t.app_title;
-        document.getElementById('lbl_language').textContent = t.lbl_language;
-        document.getElementById('lbl_currency_select').textContent = t.lbl_currency_select;
-        document.getElementById('lbl_unit_type').textContent = t.lbl_unit_type;
-        document.getElementById('title_block1').textContent = t.title_block1;
-        document.getElementById('title_block2').textContent = t.title_block2;
-        document.getElementById('lbl_final_result').textContent = t.lbl_final_result;
-        document.getElementById('title_compare').textContent = t.title_compare;
-        lblFinalDiscount.textContent = t.lbl_final_discount;
-        btnReset.textContent = t.btn_reset;
-        btnSave.textContent = t.btn_save;
-        footerText.textContent = t.footer_text;
-        document.getElementById('lbl_price_main').textContent = t.price_main;
-
-        const currentCurrency = currencySelect.value;
-        currencySelect.innerHTML = '';
-        t.currency_options.forEach(opt => {
-            const el = document.createElement('option');
-            el.value = opt.value;
-            el.textContent = opt.text;
-            if (opt.value === currentCurrency) el.selected = true;
-            currencySelect.appendChild(el);
-        });
-
-        const [currMain, currFractional] = currencySelect.value.split('|');
-        const unit = t.units[unitTypeSelect.value];
-        
-        lblPriceFractional.textContent = currFractional.charAt(0).toUpperCase() + currFractional.slice(1);
-        
-        lblBaseMain.textContent = unit.main_short;
-        lblBaseFractional.textContent = unit.fractional_short;
-        lblTargetMain.textContent = unit.main_short;
-        lblTargetFractional.textContent = unit.fractional_short;
-        
-        calculate();
-        renderHistory();
-    }
-
-    function calculate() {
-        const lang = langSelect.value;
-        const t = translations[lang];
-        
-        const [currMain, currFractional] = currencySelect.value.split('|');
-        const unit = t.units[unitTypeSelect.value];
-
-        const pMain = parseInt(priceMainInput.value) || 0;
-        const pFractional = parseInt(priceFractionalInput.value) || 0;
-        const bMain = parseInt(baseMainInput.value) || 0;
-        const bFractional = parseInt(baseFractionalInput.value) || 0;
-        const tMain = parseInt(targetMainInput.value) || 0;
-        const tFractional = parseInt(targetFractionalInput.value) || 0;
-        const discPercent = parseInt(finalDiscountInput.value) || 0;
-
-        const totalBasePriceCents = (pMain * 100) + pFractional;
-        const totalBaseMeasureUnits = (bMain * unit.ratio) + bFractional;
-        const totalTargetMeasureUnits = (tMain * unit.ratio) + tFractional;
-
-        if (totalBaseMeasureUnits === 0 || totalTargetMeasureUnits === 0) {
-            formulaText.textContent = t.placeholder_calc;
-            resultValue.textContent = `0 ${currMain} 00 ${currFractional}`;
-            discountResultRow.style.display = 'none';
-            currentCalculationCache = null;
-            return;
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
         }
 
-        const rawTargetPriceCents = (totalBasePriceCents / totalBaseMeasureUnits) * totalTargetMeasureUnits;
-        const roundedTargetPriceCents = Math.round(rawTargetPriceCents);
-
-        const finalMainPrice = Math.floor(roundedTargetPriceCents / 100);
-        const finalFractionalPrice = roundedTargetPriceCents % 100;
-        const formattedFractional = finalFractionalPrice < 10 ? '0' + finalFractionalPrice : finalFractionalPrice;
-
-        formulaText.innerHTML = `${lang === 'uk' ? 'За' : 'For'} <b>${tMain} ${unit.main} ${tFractional} ${unit.fractional}</b> <br><span style="font-size:12px; color:#7f8c8d;">(${lang === 'uk' ? 'при ціні' : 'at price'} ${pMain} ${currMain} ${pFractional} ${currFractional} ${t.formula_part} ${bMain} ${unit.main} ${bFractional} ${unit.fractional})</span>`;
-
-        let finalDisplayString = `${finalMainPrice} ${currMain} ${formattedFractional} ${currFractional}`;
-        resultValue.textContent = finalDisplayString;
-
-        // ЛОГІКА ЗНИЖКИ НА РЕЗУЛЬТАТ
-        let finalCentsForHistory = roundedTargetPriceCents;
-        
-        if (discPercent > 0 && discPercent <= 100) {
-            const discountedCents = Math.round(roundedTargetPriceCents * (1 - (discPercent / 100)));
-            finalCentsForHistory = discountedCents;
-            const dMain = Math.floor(discountedCents / 100);
-            const dFractional = discountedCents % 100;
-            const dFormattedFractional = dFractional < 10 ? '0' + dFractional : dFractional;
-            
-            discountResultRow.innerHTML = `${t.with_discount_text} (-${discPercent}%): ${dMain} ${currMain} ${dFormattedFractional} ${currFractional}`;
-            discountResultRow.style.display = 'block';
-            finalDisplayString = `${dMain} ${currMain} ${dFormattedFractional} ${currFractional} (-${discPercent}%)`;
-        } else {
-            discountResultRow.style.display = 'none';
-        }
-
-        // Розраховуємо чисту вартість за 1 грам з урахуванням фінальної знижки для чесного порівняння в історії
-        currentCalculationCache = {
-            display: finalDisplayString,
-            unitPrice: finalCentsForHistory / totalTargetMeasureUnits
-        };
-    }
-
-    function saveCurrentItem() {
-        if (!currentCalculationCache) return;
-        if (savedItems.length >= 3) savedItems.shift();
-        savedItems.push(currentCalculationCache);
-        renderHistory();
-    }
-
-    function renderHistory() {
-        const lang = langSelect.value;
-        const t = translations[lang];
-
-        if (savedItems.length === 0) {
-            historyBox.style.display = 'none';
-            return;
-        }
-
-        historyBox.style.display = 'block';
-        historyList.innerHTML = '';
-
-        let minUnitPrice = Infinity;
-        let bestIndex = -1;
-
-        savedItems.forEach((item, index) => {
-            if (item.unitPrice < minUnitPrice) {
-                minUnitPrice = item.unitPrice;
-                bestIndex = index;
-            }
-        });
-
-        savedItems.forEach((item, index) => {
-            const itemRow = document.createElement('div');
-            itemRow.className = 'history-item';
-            
-            if (index === bestIndex && savedItems.length > 1) {
-                itemRow.className += ' item-best-style';
-                itemRow.innerHTML = `<span>${t.item_text} №${index + 1}: <b>${item.display}</b></span> <span class="badge-best">${t.badge_best}</span>`;
-            } else {
-                itemRow.innerHTML = `<span>${t.item_text} №${index + 1}: <b>${item.display}</b></span>`;
-            }
-            historyList.appendChild(itemRow);
-        });
-    }
-
-    function resetCalculator() {
-        priceMainInput.value = "0";
-        priceFractionalInput.value = "0";
-        baseMainInput.value = "0";
-        baseFractionalInput.value = "0";
-        targetMainInput.value = "0";
-        targetFractionalInput.value = "0";
-        finalDiscountInput.value = "0";
-        savedItems = [];
-        calculate();
-        renderHistory();
-    }
-
-    [priceMainInput, priceFractionalInput, baseMainInput, baseFractionalInput, targetMainInput, targetFractionalInput, finalDiscountInput].forEach(element => {
-        element.addEventListener('input', calculate);
-    });
-    
-    langSelect.addEventListener('change', updateLanguageAndLabels);
-    currencySelect.addEventListener('change', updateLanguageAndLabels);
-    unitTypeSelect.addEventListener('change', updateLanguageAndLabels);
-    btnReset.addEventListener('click', resetCalculator);
-    btnSave.addEventListener('click', saveCurrentItem);
-
-    updateLanguageAndLabels();
-</script>
-
-</body>
-</html>
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
