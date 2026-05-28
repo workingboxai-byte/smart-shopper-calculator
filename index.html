@@ -18,6 +18,8 @@
             --btn-reset-hover: #c0392b;
             --btn-save-bg: #2ecc71;
             --btn-save-hover: #27ae60;
+            --discount-bg: #fff8e1;
+            --discount-border: #ffb300;
         }
 
         * {
@@ -114,7 +116,6 @@
             -moz-appearance: textfield;
         }
 
-        /* Кнопки */
         .btn-block {
             display: flex;
             gap: 10px;
@@ -196,7 +197,31 @@
             word-break: break-all;
         }
 
-        /* Стили для Сравнения результатов */
+        /* Стилі для поля знижки */
+        .discount-container {
+            margin-top: 10px;
+            background-color: var(--discount-bg);
+            border: 1px solid var(--discount-border);
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        .discount-container label {
+            color: #b78103;
+            font-weight: bold;
+        }
+
+        .discount-container input {
+            border-color: var(--discount-border);
+        }
+
+        .discount-row-text {
+            font-size: 14px;
+            color: #e67e22;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+
         .history-box {
             margin-top: 15px;
             background-color: #fcfcfc;
@@ -303,7 +328,7 @@
         </div>
     </div>
 
-    <div class="section-title" id="title_block2">Скільки вам нужно розрахувати</div>
+    <div class="section-title" id="title_block2">Скільки вам потрібно розрахувати</div>
     
     <div class="row">
         <div class="col">
@@ -323,6 +348,13 @@
     <div class="result-box">
         <div class="result-label" id="lbl_final_result">Остаточний результат</div>
         <div id="result_value" class="result-value">0 грн. 00 коп.</div>
+        
+        <div id="discount_result_row" class="discount-row-text" style="display: none;"></div>
+    </div>
+
+    <div class="discount-container">
+        <label for="final_discount" id="lbl_final_discount">Додаткова знижка на результат (%)</label>
+        <input type="number" id="final_discount" value="0" min="0" max="100" inputmode="numeric">
     </div>
 
     <div class="btn-block">
@@ -336,7 +368,7 @@
     </div>
 
     <div class="footer-credits" id="footer_text">
-        Версія v1.3.0-stable • Розробник: Маценко С. М. (Izi Vayb)
+        Версія v1.4.0-stable • Розробник: Маценко С. М. (Izi Vayb)
     </div>
 </div>
 
@@ -350,6 +382,7 @@
             title_block1: "Базова ціна та міра товару",
             title_block2: "Скільки вам потрібно розрахувати",
             lbl_final_result: "Остаточний результат",
+            lbl_final_discount: "Додаткова знижка на результат (%)",
             btn_reset: "Очистити",
             btn_save: "Зберегти",
             title_compare: "Порівняння товарів (макс. 3)",
@@ -368,7 +401,8 @@
             },
             formula_part: "за",
             item_text: "Товар",
-            footer_text: "Версія v1.3.0-stable • Розробник: Маценко С. М. (Izi Vayb)"
+            with_discount_text: "Зі знижкою",
+            footer_text: "Версія v1.4.0-stable • Розробник: Маценко С. М. (Izi Vayb)"
         },
         en: {
             app_title: "Universal Calculator \"Smart Shopper\"",
@@ -378,6 +412,7 @@
             title_block1: "Base Price and Item Measure",
             title_block2: "Amount You Need to Calculate",
             lbl_final_result: "Final Result",
+            lbl_final_discount: "Extra Result Discount (%)",
             btn_reset: "Clear All",
             btn_save: "Save Item",
             title_compare: "Item Comparison (max 3)",
@@ -396,7 +431,8 @@
             },
             formula_part: "for",
             item_text: "Item",
-            footer_text: "Version v1.3.0-stable • Developer: Matsenko S. M. (Izi Vayb)"
+            with_discount_text: "With Discount",
+            footer_text: "Version v1.4.0-stable • Developer: Matsenko S. M. (Izi Vayb)"
         }
     };
 
@@ -410,23 +446,26 @@
     const baseFractionalInput = document.getElementById('base_fractional');
     const targetMainInput = document.getElementById('target_main');
     const targetFractionalInput = document.getElementById('target_fractional');
+    const finalDiscountInput = document.getElementById('final_discount');
     
     const lblPriceFractional = document.getElementById('lbl_price_fractional');
     const lblBaseMain = document.getElementById('lbl_base_main');
     const lblBaseFractional = document.getElementById('lbl_base_fractional');
     const lblTargetMain = document.getElementById('lbl_target_main');
     const lblTargetFractional = document.getElementById('lbl_target_fractional');
+    const lblFinalDiscount = document.getElementById('lbl_final_discount');
     
     const formulaText = document.getElementById('formula_text');
     const resultValue = document.getElementById('result_value');
+    const discountResultRow = document.getElementById('discount_result_row');
     const btnReset = document.getElementById('btn_reset');
     const btnSave = document.getElementById('btn_save');
     const historyBox = document.getElementById('history_box');
     const historyList = document.getElementById('history_list');
     const footerText = document.getElementById('footer_text');
 
-    // Хранилище для сохраненных расчетов (макс 3 записи)
     let savedItems = [];
+    let currentCalculationCache = null;
 
     function updateLanguageAndLabels() {
         const lang = langSelect.value;
@@ -440,6 +479,7 @@
         document.getElementById('title_block2').textContent = t.title_block2;
         document.getElementById('lbl_final_result').textContent = t.lbl_final_result;
         document.getElementById('title_compare').textContent = t.title_compare;
+        lblFinalDiscount.textContent = t.lbl_final_discount;
         btnReset.textContent = t.btn_reset;
         btnSave.textContent = t.btn_save;
         footerText.textContent = t.footer_text;
@@ -469,9 +509,6 @@
         renderHistory();
     }
 
-    // Переменные для хранения текущего рассчитанного значения
-    let currentCalculationCache = null;
-
     function calculate() {
         const lang = langSelect.value;
         const t = translations[lang];
@@ -485,6 +522,7 @@
         const bFractional = parseInt(baseFractionalInput.value) || 0;
         const tMain = parseInt(targetMainInput.value) || 0;
         const tFractional = parseInt(targetFractionalInput.value) || 0;
+        const discPercent = parseInt(finalDiscountInput.value) || 0;
 
         const totalBasePriceCents = (pMain * 100) + pFractional;
         const totalBaseMeasureUnits = (bMain * unit.ratio) + bFractional;
@@ -493,6 +531,7 @@
         if (totalBaseMeasureUnits === 0 || totalTargetMeasureUnits === 0) {
             formulaText.textContent = t.placeholder_calc;
             resultValue.textContent = `0 ${currMain} 00 ${currFractional}`;
+            discountResultRow.style.display = 'none';
             currentCalculationCache = null;
             return;
         }
@@ -506,30 +545,40 @@
 
         formulaText.innerHTML = `${lang === 'uk' ? 'За' : 'For'} <b>${tMain} ${unit.main} ${tFractional} ${unit.fractional}</b> <br><span style="font-size:12px; color:#7f8c8d;">(${lang === 'uk' ? 'при ціні' : 'at price'} ${pMain} ${currMain} ${pFractional} ${currFractional} ${t.formula_part} ${bMain} ${unit.main} ${bFractional} ${unit.fractional})</span>`;
 
-        const displayString = `${finalMainPrice} ${currMain} ${formattedFractional} ${currFractional}`;
-        resultValue.textContent = displayString;
+        let finalDisplayString = `${finalMainPrice} ${currMain} ${formattedFractional} ${currFractional}`;
+        resultValue.textContent = finalDisplayString;
 
-        // Сохраняем в кэш для кнопки "Зберегти" цену за 1 минимальную единицу (для точного сравнения)
+        // ЛОГІКА ЗНИЖКИ НА РЕЗУЛЬТАТ
+        let finalCentsForHistory = roundedTargetPriceCents;
+        
+        if (discPercent > 0 && discPercent <= 100) {
+            const discountedCents = Math.round(roundedTargetPriceCents * (1 - (discPercent / 100)));
+            finalCentsForHistory = discountedCents;
+            const dMain = Math.floor(discountedCents / 100);
+            const dFractional = discountedCents % 100;
+            const dFormattedFractional = dFractional < 10 ? '0' + dFractional : dFractional;
+            
+            discountResultRow.innerHTML = `${t.with_discount_text} (-${discPercent}%): ${dMain} ${currMain} ${dFormattedFractional} ${currFractional}`;
+            discountResultRow.style.display = 'block';
+            finalDisplayString = `${dMain} ${currMain} ${dFormattedFractional} ${currFractional} (-${discPercent}%)`;
+        } else {
+            discountResultRow.style.display = 'none';
+        }
+
+        // Розраховуємо чисту вартість за 1 грам з урахуванням фінальної знижки для чесного порівняння в історії
         currentCalculationCache = {
-            display: displayString,
-            unitPrice: totalBasePriceCents / totalBaseMeasureUnits // чистая цена за 1 грамм/миллилитр
+            display: finalDisplayString,
+            unitPrice: finalCentsForHistory / totalTargetMeasureUnits
         };
     }
 
-    // Сохранение текущего расчета в таблицу сравнения
     function saveCurrentItem() {
         if (!currentCalculationCache) return;
-
-        // Ограничиваем список тремя результатами. Если больше трех, удаляем старый
-        if (savedItems.length >= 3) {
-            savedItems.shift();
-        }
-
+        if (savedItems.length >= 3) savedItems.shift();
         savedItems.push(currentCalculationCache);
         renderHistory();
     }
 
-    // Отрисовка списка сравнения
     function renderHistory() {
         const lang = langSelect.value;
         const t = translations[lang];
@@ -542,7 +591,6 @@
         historyBox.style.display = 'block';
         historyList.innerHTML = '';
 
-        // Ищем индекс самого дешевого товара по базовой цене за единицу
         let minUnitPrice = Infinity;
         let bestIndex = -1;
 
@@ -558,17 +606,15 @@
             itemRow.className = 'history-item';
             
             if (index === bestIndex && savedItems.length > 1) {
-                itemRow.classList.add('item-best-style');
+                itemRow.className += ' item-best-style';
                 itemRow.innerHTML = `<span>${t.item_text} №${index + 1}: <b>${item.display}</b></span> <span class="badge-best">${t.badge_best}</span>`;
             } else {
                 itemRow.innerHTML = `<span>${t.item_text} №${index + 1}: <b>${item.display}</b></span>`;
             }
-            
             historyList.appendChild(itemRow);
         });
     }
 
-    // Полный сброс (включая историю)
     function resetCalculator() {
         priceMainInput.value = "0";
         priceFractionalInput.value = "0";
@@ -576,12 +622,13 @@
         baseFractionalInput.value = "0";
         targetMainInput.value = "0";
         targetFractionalInput.value = "0";
-        savedItems = []; // Очищаем историю сравнения
+        finalDiscountInput.value = "0";
+        savedItems = [];
         calculate();
         renderHistory();
     }
 
-    [priceMainInput, priceFractionalInput, baseMainInput, baseFractionalInput, targetMainInput, targetFractionalInput].forEach(element => {
+    [priceMainInput, priceFractionalInput, baseMainInput, baseFractionalInput, targetMainInput, targetFractionalInput, finalDiscountInput].forEach(element => {
         element.addEventListener('input', calculate);
     });
     
