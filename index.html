@@ -29,7 +29,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
@@ -212,7 +212,6 @@
             text-transform: uppercase;
         }
 
-        /* Стилі для Модального Вікна Довідки */
         .modal {
             display: none;
             position: fixed;
@@ -392,7 +391,6 @@
 </div>
 
 <script>
-    // Елементи інтерфейсу
     const langSelect = document.getElementById('lang-select');
     const currencySelect = document.getElementById('currency-select');
     const unitTypeSelect = document.getElementById('unit-type-select');
@@ -416,7 +414,6 @@
     const closeModal = document.getElementById('close-modal');
     const helpContent = document.getElementById('help-content');
 
-    // Текстові пакети перекладів інтерфейсу
     const translations = {
         uk: {
             title: "Помічник покупця",
@@ -478,7 +475,6 @@
 
     let savedItems = [];
 
-    // Функція оновлення текстових написів мови та мір
     function updateLanguageAndLabels() {
         const lang = langSelect.value;
         const type = unitTypeSelect.value;
@@ -510,94 +506,50 @@
 
         calculate();
         renderHistory();
-        updateHelpContent(); // Оновлюємо мову інструкції в довідці
+        updateHelpContent();
     }
 
-    // Текст самої інструкції (UA та EN версії)
     function updateHelpContent() {
         const lang = langSelect.value;
         if (lang === 'uk') {
             helpContent.innerHTML = `
                 <h2>Помічник покупця — Інструкція</h2>
                 <p>Цей калькулятор допоможе вам швидко дізнатися точну вартість будь-якої кількості товару (на вагу, об'єм чи довжину), порівняти ціни та обрати найвигіднішу пропозицію в магазині.</p>
-                
                 <h3>КРОК 1: НАЛАШТУВАННЯ</h3>
-                <ul>
-                    <li>Оберіть зручну мову та потрібну валюту (Гривні, Долари, Євро).</li>
-                    <li>Оберіть тип вимірювання товару: <b>Вага</b> (кг/гр), <b>Об'єм</b> (л/мл) або <b>Довжина</b> (м/см).</li>
-                </ul>
-
+                <ul><li>Оберіть зручну мову та потрібну валюту (Гривні, Долари, Євро).</li><li>Оберіть тип вимірювання товару: <b>Вага</b> (кг/гр), <b>Об'єм</b> (л/мл) або <b>Довжина</b> (м/см).</li></ul>
                 <h3>КРОК 2: ВВЕДЕННЯ ДАНИХ</h3>
                 <p>Подивіться на цінник товару та заповніть блоки:</p>
-                <ul>
-                    <li><b>Базова ціна та міра:</b> Введіть ціну з цінника та вагу/об'єм, за яку вона вказана. (<i>Наприклад: якщо 150 грн вказано за 450 грамів, то в полі Цілі пишіть 0, а в Дробові — 450</i>).</li>
-                    <li><b>Скільки вам потрібно:</b> Введіть ту кількість товару, яку ви реально хочете купити.</li>
-                </ul>
-
+                <ul><li><b>Базова ціна та міра:</b> Введіть ціну з цінника та вагу/об'єм, за яку вона вказана. (<i>Наприклад: якщо 150 грн вказано за 450 грамів, то в полі Цілі пишіть 0, а в Дробові — 450</i>).</li><li><b>Скільки вам потрібно:</b> Введіть ту кількість товару, яку ви реально хочете купити.</li></ul>
                 <h3>КРОК 3: ЗНИЖКИ ТА РЕЗУЛЬТАТ</h3>
-                <ul>
-                    <li>У полі <b>Остаточний результат</b> ви миттєво побачите точну вартість потрібної вам кількості.</li>
-                    <li>Якщо на товар діє додаткова акція, введіть відсоток знижки в полі знижок — калькулятор одразу все перерахує.</li>
-                </ul>
-
+                <ul><li>У полі <b>Остаточний результат</b> ви миттєво побачите точну вартість потрібної вам кількості.</li><li>Якщо на товар діє додаткова акція, введіть відсоток знижки в полі знижок — калькулятор одразу все перерахує.</li></ul>
                 <h3>КРОК 4: ПОРІВНЯННЯ ТОВАРІВ</h3>
                 <p>Якщо ви вагаєтесь між 2 або 3 різними упаковками чи брендами:</p>
-                <ol>
-                    <li>Введіть дані першого товару та натисніть <b>Зберегти</b>.</li>
-                    <li>Введіть дані другого товару (змініть ціну чи міру) і знову натисніть <b>Зберегти</b>.</li>
-                    <li>Знизу з'явиться таблиця порівняння (до 3 товарів).</li>
-                    <li>Програма знайде найдешевший варіант на 1 кг/л/м і підсвітить його зеленим кольором із поміткою <b>"ВИГІДНО!"</b>.</li>
-                </ol>
-
+                <ol><li>Введіть дані першого товару та натисніть <b>Зберегти</b>.</li><li>Введіть дані другого товару (змініть ціну чи міру) і знову натисніть <b>Зберегти</b>.</li><li>Знизу з'явиться таблиця порівняння (до 3 товарів).</li><li>Програма знайде найдешевший варіант на 1 кг/л/м і підсвітить його зеленим кольором із поміткою <b>"ВИГІДНО!"</b>.</li></ol>
                 <h3>ВАЖЛИВІ ФАКТОРИ:</h3>
-                <p>1. НЕ залишайте поля базової міри порожніми або з нулем.<br>
-                2. Копійки та грами вводяться ОКРЕМО від цілих чисел (без крапок чи ком).<br>
-                3. Функція порівняння чесно враховує введену вами додаткову знижку.</p>
+                <p>1. НЕ залишайте поля базової міри порожніми або з нулем.<br>2. Копійки та грами вводяться ОКРЕМО від цілих чисел (без крапок чи ком).<br>3. Функція порівняння чесно враховує введену вами додаткову знижку.</p>
                 <p style="text-align:right; font-weight:600; margin-top:15px; color:#7f8c8d;">Розробник: Маценко С. М. (Izi Vayb)</p>
             `;
         } else {
             helpContent.innerHTML = `
                 <h2>Smart Shopper — User Manual</h2>
                 <p>This calculator helps you instantly find the exact price for any custom amount of goods (by weight, volume, or length), compare prices, and pick the best deal in the store.</p>
-                
                 <h3>STEP 1: CONFIGURATION</h3>
-                <ul>
-                    <li>Choose your preferred language and currency (UAH, USD, EUR).</li>
-                    <li>Select the measurement type: <b>Weight</b> (kg/g), <b>Volume</b> (L/ml), or <b>Length</b> (m/cm).</li>
-                </ul>
-
+                <ul><li>Choose your preferred language and currency (UAH, USD, EUR).</li><li>Select the measurement type: <b>Weight</b> (kg/g), <b>Volume</b> (L/ml), or <b>Length</b> (m/cm).</li></ul>
                 <h3>STEP 2: ENTERING DATA</h3>
                 <p>Check the product price tag and fill in the sections:</p>
-                <ul>
-                    <li><b>Base Price & Measure:</b> Enter the price from the tag and the weight/volume it stands for. (<i>E.g., if it costs $5 for 450 grams, type 0 in Whole and 450 in Grams</i>).</li>
-                    <li><b>How much do you need:</b> Enter the exact amount you want to buy.</li>
-                </ul>
-
+                <ul><li><b>Base Price & Measure:</b> Enter the price from the tag and the weight/volume it stands for.</li><li><b>How much do you need:</b> Enter the exact amount you want to buy.</li></ul>
                 <h3>STEP 3: DISCOUNTS & RESULTS</h3>
-                <ul>
-                    <li>In the <b>Final Result</b> box, you will instantly see the exact cost of your desired quantity.</li>
-                    <li>If you have a coupon or cashback, type the percentage in the discount input to recalculate on the fly.</li>
-                </ul>
-
+                <ul><li>In the <b>Final Result</b> box, you will instantly see the exact cost of your desired quantity.</li><li>If you have a coupon or cashback, type the percentage in the discount input to recalculate on the fly.</li></ul>
                 <h3>STEP 4: PRODUCT COMPARISON</h3>
                 <p>If you are choosing between 2 or 3 different packages or brands:</p>
-                <ol>
-                    <li>Enter the first product data and click <b>Save</b>.</li>
-                    <li>Enter the second product data (change price or measure) and click <b>Save</b> again.</li>
-                    <li>A comparison list will appear below (up to 3 products).</li>
-                    <li>The app calculates the unit cost per 1 kg/L/m and highlights the cheapest one in green labeled <b>"BEST DEAL!"</b>.</li>
-                </ol>
-
+                <ol><li>Enter the first product data and click <b>Save</b>.</li><li>Enter the second product data (change price or measure) and click <b>Save</b> again.</li><li>A comparison list will appear below (up to 3 products).</li><li>The app calculates the unit cost per 1 kg/L/m and highlights the cheapest one in green labeled <b>"BEST DEAL!"</b>.</li></ol>
                 <h3>IMPORTANT TIPS:</h3>
-                <p>1. DO NOT leave base measure fields empty or with a zero.<br>
-                2. Enter cents and grams SEPARATELY from whole numbers (do not use dots or commas).<br>
-                3. The comparison grid accurately considers all applied personal discounts.</p>
+                <p>1. DO NOT leave base measure fields empty or with a zero.<br>2. Enter cents and grams SEPARATELY from whole numbers.<br>3. The comparison grid accurately considers all applied personal discounts.</p>
                 <p style="text-align:right; font-weight:600; margin-top:15px; color:#7f8c8d;">Developer: Matsenko S. M. (Izi Vayb)</p>
             `;
         }
     }
 
-    // Головна логіка математичних обчислень калькулятора
     function getValues() {
         const pMain = parseFloat(priceMainInput.value) || 0;
         const pFractional = parseFloat(priceFractionalInput.value) || 0;
@@ -626,17 +578,16 @@
 
         const { totalPrice, totalBaseMeasure, totalTargetMeasure, discountPercent, pMain, pFractional, bMain, bFractional, tMain, tFractional } = getValues();
 
+        // Исправленная проверка
         if (totalBaseMeasure <= 0) {
-            formulaText.innerHTML = `<span style="color:#e74c3c;">${lang === 'uk' ? 'Помилка: Базова міра не може бути 0!' : 'Error: Base measure cannot be 0!'}</span>`;
+            formulaText.innerHTML = `${lang === 'uk' ? 'Введіть дані товару' : 'Enter product data'}`;
             resultValue.textContent = `0 ${currMain} 00 ${currFractional}`;
             return;
         }
 
-        // Чиста математика ціни за одиницю товару
         const pricePerUnit = totalPrice / totalBaseMeasure;
         let finalPrice = pricePerUnit * totalTargetMeasure;
 
-        // Застосування додаткової знижки
         if (discountPercent > 0 && discountPercent <= 100) {
             finalPrice = finalPrice * (1 - discountPercent / 100);
         }
@@ -645,14 +596,10 @@
         const finalFractionalPrice = Math.round((finalPrice - finalMainPrice) * 100);
         const formattedFractional = finalFractionalPrice < 10 ? '0' + finalFractionalPrice : finalFractionalPrice;
 
-        // Рядок формули
         formulaText.innerHTML = `${lang === 'uk' ? 'За' : 'For'} <b>${tMain} ${unit.main} ${tFractional} ${unit.fractional}</b> <br><span style="font-size:12px; color:#7f8c8d;">(${lang === 'uk' ? 'при ціні' : 'at price'} ${pMain} ${currMain} ${pFractional} ${currFractional} ${t.formula_part} ${bMain} ${unit.main} ${bFractional} ${unit.fractional})</span>`;
-
-        // Виведення результату
         resultValue.textContent = `${finalMainPrice} ${currMain} ${formattedFractional} ${currFractional}`;
     }
 
-    // Логіка збереження товарів до списку порівняння
     function saveCurrentItem() {
         const lang = langSelect.value;
         const currType = currencySelect.value;
@@ -666,7 +613,7 @@
         if (totalBaseMeasure <= 0) return;
 
         if (savedItems.length >= 3) {
-            savedItems.shift(); // Видаляємо найстаріший товар, якщо вже є 3
+            savedItems.shift();
         }
 
         const pricePerUnit = totalPrice / totalBaseMeasure;
@@ -679,7 +626,6 @@
         const finalFractionalPrice = Math.round((finalPrice - finalMainPrice) * 100);
         const formattedFractional = finalFractionalPrice < 10 ? '0' + finalFractionalPrice : finalFractionalPrice;
 
-        // Розраховуємо чисту вартість за 1 повну базову одиницю (1 кг / 1 л / 1 м) із врахуванням знижки для об'єктивності порівняння
         let unitCostWithDiscount = pricePerUnit;
         if (discountPercent > 0 && discountPercent <= 100) {
             unitCostWithDiscount = pricePerUnit * (1 - discountPercent / 100);
@@ -693,7 +639,6 @@
         renderHistory();
     }
 
-    // Візуалізація списку та підсвічування зеленим плашки "ВИГІДНО!"
     function renderHistory() {
         const lang = langSelect.value;
         const t = translations[lang];
@@ -701,7 +646,6 @@
 
         if (savedItems.length === 0) return;
 
-        // Пошук індексу найдешевшого товару на основі математики
         let minCost = Infinity;
         let bestIndex = -1;
         savedItems.forEach((item, index) => {
@@ -717,7 +661,7 @@
             
             if (index === bestIndex && savedItems.length > 1) {
                 itemRow.className += ' item-best-style';
-                itemRow.innerHTML = `<span>${t.item_text} №${index + 1}: <b>${item.display}</b></span> <span class=\"badge-best\">${t.badge_best}</span>`;
+                itemRow.innerHTML = `<span>${t.item_text} №${index + 1}: <b>${item.display}</b></span> <span class="badge-best">${t.badge_best}</span>`;
             } else {
                 itemRow.innerHTML = `<span>${t.item_text} №${index + 1}: <b>${item.display}</b></span>`;
             }
@@ -725,7 +669,6 @@
         });
     }
 
-    // Повний сброс калькулятора та історії порівняння товарів
     function resetCalculator() {
         priceMainInput.value = "0";
         priceFractionalInput.value = "0";
@@ -739,22 +682,10 @@
         renderHistory();
     }
 
-    // Слухачі подій для відкриття та закриття модального вікна довідки
-    btnHelp.addEventListener('click', () => {
-        helpModal.style.display = 'flex';
-    });
+    btnHelp.addEventListener('click', () => { helpModal.style.display = 'flex'; });
+    closeModal.addEventListener('click', () => { helpModal.style.display = 'none'; });
+    window.addEventListener('click', (event) => { if (event.target === helpModal) { helpModal.style.display = 'none'; } });
 
-    closeModal.addEventListener('click', () => {
-        helpModal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target === helpModal) {
-            helpModal.style.display = 'none';
-        }
-    });
-
-    // Слухачі змін значень полів введення
     [priceMainInput, priceFractionalInput, baseMainInput, baseFractionalInput, targetMainInput, targetFractionalInput, finalDiscountInput].forEach(element => {
         element.addEventListener('input', calculate);
     });
@@ -765,7 +696,6 @@
     btnReset.addEventListener('click', resetCalculator);
     btnSave.addEventListener('click', saveCurrentItem);
 
-    // Стартова ініціалізація додатка
     updateLanguageAndLabels();
 </script>
 
